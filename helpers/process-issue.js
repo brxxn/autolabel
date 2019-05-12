@@ -80,6 +80,8 @@ module.exports = {
                         repo: repo,
                         issue_number: issue_number,
                         body: labelMessage
+                    }).then((data) => {
+                        success(new ProcessIssueResult(true))
                     })
                 }
             }
@@ -87,8 +89,12 @@ module.exports = {
                 owner: owner,
                 repo: repo,
                 labels: [labelName.toLowerCase()]
+            }).then((data) => {
+                success(new ProcessIssueResult(true))
+            }).catch((exception) => {
+                failure(new ProcessIssueResult(false, JSON.stringify(exception)))
             })
-            success(new ProcessIssueResult(true))
+            
         })
     }
 
