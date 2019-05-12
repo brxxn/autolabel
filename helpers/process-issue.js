@@ -51,9 +51,10 @@ module.exports = {
                     repo: repo,
                     issue_number: issue_number,
                     body: labelMessage
+                }).then(()=> {
+                    success(new ProcessIssueResult(true))
                 })
             }
-            success(new ProcessIssueResult(true))
         }
         // simple hacky spell but quite unbreakable.
         var labelName = matches[0].substring(1, matches[0].length-1);
