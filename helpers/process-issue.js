@@ -71,7 +71,7 @@ module.exports = {
             for (var label of labels) {
                 labelNames.push(label.name.toLowerCase())
             }
-            labelNames.filter((value, index, arr) => {
+            labelNames = labelNames.filter((value, index, arr) => {
                 if (!args.blacklistedLabels || typeof args.blacklistedLabels !== "string") {
                     return true;
                 }
