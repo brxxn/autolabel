@@ -16,6 +16,7 @@ module.exports = {
     processIssue: function (tools, issue, args, success, failure) {
         if (!tools || !issue) {
             failure(new ProcessIssueResult(false, 'tools or issue is null'))
+            return;
         }
         var owner = tools.context.issue.owner;
         var repo = tools.context.issue.repo;
@@ -23,10 +24,12 @@ module.exports = {
 
         if (issue.data.state === "closed") {
             success(new ProcessIssueResult(true))
+            return;
         }
 
         if (issue.data.labels.length != 0) {
             success(new ProcessIssueResult(true))
+            return;
         }
 
         var issueType = issue.data.pull_request ? 'pull request' : 'issue'
@@ -55,6 +58,7 @@ module.exports = {
                     success(new ProcessIssueResult(true))
                 })
             }
+            return
         }
         // simple hacky spell but quite unbreakable.
         var labelName = matches[0].substring(1, matches[0].length-1);
@@ -67,9 +71,19 @@ module.exports = {
             for (var label of labels) {
                 labelNames.push(label.name.toLowerCase())
             }
+            labelNames.filter((value, index, arr) => {
+                if (!args.blacklistedLabels || typeof args.blacklistedLabels !== "string") {
+                    return true;
+                }
+                var blacklistedLabels = args.blacklistedLabels.toLowerCase().split(",")
+                if (blacklistedLabels.includes(value)) {
+                    return false;
+                }
+                return true;
+            })
             if (!labelNames.includes(labelName.toLowerCase())) {
                 if (args.requireLabel) {
-                    var labelMessage = `This ${issueType} has been automatically closed because ${labelName} is not a label. Please resubmit this ${issueType} with a valid label in brackets.\n\n#### Note\n\nThis action was performed automatically by a GitHub action. Please reply to this ${issueType} or ask a contributor if you have any questions.`
+                    var labelMessage = `This ${issueType} has been automatically closed because ${labelName} is not a label. Please resubmit this ${issueType} with a valid label in brackets. Note that you may also get this error if you do not have permission to use the label.\n\n#### Note\n\nThis action was performed automatically by a GitHub action. Please reply to this ${issueType} or ask a contributor if you have any questions.`
                     tools.github.issues.update({
                         owner: owner,
                         repo: repo,
