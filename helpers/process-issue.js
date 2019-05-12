@@ -84,6 +84,7 @@ module.exports = {
                         success(new ProcessIssueResult(true))
                     })
                 }
+                return
             }
             tools.github.issues.update({
                 owner: owner,
