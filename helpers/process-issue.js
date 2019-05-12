@@ -17,8 +17,8 @@ module.exports = {
         if (!tools || !issue) {
             failure(new ProcessIssueResult(false, 'tools or issue is null'))
         }
-        var owner = issue.data.owner;
-        var repo = issue.data.repo;
+        var owner = tools.context.issue.owner;
+        var repo = tools.context.issue.repo;
         var issue_number = issue.data.number;
 
         if (issue.data.state === "closed") {
