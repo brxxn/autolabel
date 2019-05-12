@@ -34,7 +34,7 @@ module.exports = {
         // [matched]
         var labelRegex = new RegExp('^\\[([a-z]|[A-Z]|\\s)+\\]');
         var matches = labelRegex.exec(issue.data.title);
-        if (matches.length === 0) {
+        if (!matches || matches.length === 0) {
             if (args.requireLabel) {
                 var filteredTitle = issue.data.title.replace("\`", "\\\`")
                 // i hope you have line wrap enabled.
