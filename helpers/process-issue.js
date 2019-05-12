@@ -9,22 +9,24 @@ module.exports = {
      * @param {Toolkit} tools 
      * @param {Octokit.Response<Octokit.IssuesGetResponse>} issue 
      * @param {Object} args
+     * @param {function} success
+     * @param {function} failure
      * @returns {ProcessIssueResult}
      */
-    processIssue: function (tools, issue, args) {
+    processIssue: function (tools, issue, args, success, failure) {
         if (!tools || !issue) {
-            return new ProcessIssueResult(false, 'tools or issue is null');
+            failure(new ProcessIssueResult(false, 'tools or issue is null'))
         }
         var owner = issue.data.owner;
         var repo = issue.data.repo;
         var issue_number = issue.data.number;
 
         if (issue.data.state === "closed") {
-            return new ProcessIssueResult(true);
+            success(new ProcessIssueResult(true))
         }
 
         if (issue.data.labels.length != 0) {
-            return new ProcessIssueResult(true);
+            success(new ProcessIssueResult(true))
         }
 
         var issueType = issue.data.pull_request ? 'pull request' : 'issue'
@@ -51,7 +53,7 @@ module.exports = {
                     body: labelMessage
                 })
             }
-            return new ProcessIssueResult(true);
+            success(new ProcessIssueResult(true))
         }
         // simple hacky spell but quite unbreakable.
         var labelName = matches[0].substring(1, matches[0].length-1);
@@ -80,15 +82,14 @@ module.exports = {
                         body: labelMessage
                     })
                 }
-                return
             }
             tools.github.issues.update({
                 owner: owner,
                 repo: repo,
                 labels: [labelName.toLowerCase()]
             })
+            success(new ProcessIssueResult(true))
         })
-        return new ProcessIssueResult(true);
     }
 
 }
