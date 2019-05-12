@@ -64,7 +64,7 @@ module.exports = {
             var labels = response.data;
             var labelNames = [];
             for (var label of labels) {
-                labelNames.append(label.name.toLowerCase())
+                labelNames.push(label.name.toLowerCase())
             }
             if (!labelNames.includes(labelName.toLowerCase())) {
                 if (args.requireLabel) {
