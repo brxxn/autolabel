@@ -20,7 +20,7 @@ Toolkit.run(async tools => {
       tools.exit.success('exited successfully - issue is not a pull request.')
       return;
     }
-    var result = issueHelper.processIssue(tools, response, (result) => {
+    var result = issueHelper.processIssue(tools, response, args, (result) => {
       tools.exit.success(result.getMessage())
     }, (result) => {
       tools.exit.failure(result.getMessage())
