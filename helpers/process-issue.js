@@ -88,6 +88,7 @@ module.exports = {
             tools.github.issues.update({
                 owner: owner,
                 repo: repo,
+                issue_number: issue_number,
                 labels: [labelName.toLowerCase()]
             }).then((data) => {
                 success(new ProcessIssueResult(true))
